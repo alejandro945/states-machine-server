@@ -1,0 +1,29 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: machines-website
+spec:
+  selector: # Define the wrapping strategy
+    matchLabels: # Match all pods with the defined labels
+      app: machines-website
+  template: # This is the template of the pod inside the deployment
+    metadata:
+      labels:
+        app: machines-website
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: registrystatemachines.azurecr.io/state-machines:v1
+          name: machines-website
+          resources:
+            requests: # Minimum amount of resources requested
+              cpu: 100m
+              memory: 128Mi
+            limits: # Maximum amount of resources requested
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 8080
+              name: http
