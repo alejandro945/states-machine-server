@@ -5,6 +5,6 @@ package net.state.statemachineserver.repository;
 * Postgrees or non-relations such as Mongo BD
 * extend JpaRepository<Node, Long> data.jpa library
 */
-public interface NodeRepository {
+public interface MachineRepository {
     
 }

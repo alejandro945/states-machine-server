@@ -10,6 +10,4 @@ public class StateMachineServerApplication {
 		SpringApplication.run(StateMachineServerApplication.class, args);
 	}
 
-	
-
 }
