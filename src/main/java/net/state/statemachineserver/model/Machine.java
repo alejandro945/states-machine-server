@@ -1,5 +1,8 @@
 package net.state.statemachineserver.model;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class Machine {
 
     /**
