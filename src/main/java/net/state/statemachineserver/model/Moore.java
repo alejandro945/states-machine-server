@@ -6,15 +6,31 @@ public class Moore {
     private String[] states, inputSymbols, outputSymbols;
     private String[][] successors;
 
+    /**
+     * Constructor method of a connected Moore machine.
+     * @param machine - Java String matrix representing a Moore machine.
+    */
+
     public Moore(String[][] machine) {
         machine = connected(machine);
         fillMoore(machine);
     }
 
+    /**
+     * This method is used to connected a Moore machine.
+     * @param machine - Java String matrix representing a Moore machine.
+    */
+
     public String[][] connected(String[][] machine) {
         ArrayList<Integer> included = connectedStates(machine);
         return connectedMachine(machine, included);
     }
+
+    /**
+     * This method is used to connected a Moore machine. <br>
+     * @param machine - Java String matrix representing a Moore machine.
+     * @param included - ArrayList of integers representing the included items.
+    */
 
     private String[][] connectedMachine(String[][] machine, ArrayList<Integer> included) {
         String[][] connected = new String[included.size() + 1][machine[0].length];
@@ -29,6 +45,11 @@ public class Moore {
         return connected;
     }
 
+    /**
+     * This method is used to connect the states of the Moore machine.
+     * @param machine - Java String matrix representing a Moore machine.
+    */
+
     private ArrayList<Integer> connectedStates(String[][] machine) {
         ArrayList<Integer> included = new ArrayList<>();
         included.add(0);
@@ -42,12 +63,23 @@ public class Moore {
         return included;
     }
 
+    /**
+     * This method is used to get the index of an element in a list of integers.
+     * @param list - list of integers.
+     * @param num - integer to use for the index search.
+    */
+
     private int indexOfList(ArrayList<Integer> list, int num) {
         int index = -1;
         for (int i = 0; i < list.size() && (index == -1); i++)
             index = list.get(i) == num ? i : -1;
         return index;
     }
+
+    /**
+     * This method is used to get the index of a state in the list of states of the Moore machine.
+     * @param index - the state converted to char.
+    */
 
     private int indexState(int index) {
         for (int i = 0; i < states.length; i++) {
@@ -56,6 +88,11 @@ public class Moore {
         }
         return -1;
     }
+
+    /**
+     * This method is used to do the partitioning algorithm for the machine.
+     * @param format - format of the table to be displayed represented by True for intermediate table and False for final table.
+    */
 
     public String[][] partitioning(boolean format) {
         ArrayList<ArrayList<Integer>> groups = step2A();
@@ -69,6 +106,11 @@ public class Moore {
         return minimize;
     }
 
+    /**
+     * This method is used to do the partitioning algorithm for the machine.
+     * @param format - format of the table to be displayed represented by True for intermediate table and False for final table.
+    */
+
     private String[][] format(ArrayList<ArrayList<Integer>> groups, boolean format) {
         String[][] minimize = new String[groups.size() + 1][inputSymbols.length + 2];
         minimize[0][0] = format ? "Blocks" : "New Names";
@@ -79,6 +121,12 @@ public class Moore {
         minimize = format ? intermediateFormat(groups, minimize) : finalFormat(groups, minimize);
         return minimize;
     }
+
+    /**
+     * This method is used to put the Moore table in the final format.
+     * @param groups - final groups obtained after doing the partitioning algorithm.
+     * @param minimize - Java String matrix representing a Moore machine after partitioning.
+    */
 
     private String[][] finalFormat(ArrayList<ArrayList<Integer>> groups, String[][] minimize) {
         for (int i = 0, j = groups.size() - 1; i < groups.size(); i++, j--)
@@ -96,6 +144,12 @@ public class Moore {
         }
         return minimize;
     }
+
+    /**
+     * This method is used to put the Moore table in the intermediate format.
+     * @param groups - final groups obtained after doing the partitioning algorithm.
+     * @param minimize - Java String matrix representing a Moore machine after partitioning.
+    */
 
     private String[][] intermediateFormat(ArrayList<ArrayList<Integer>> groups, String[][] minimize) {
         for (int i = 0; i < groups.size(); i++) {
@@ -128,6 +182,27 @@ public class Moore {
         return minimize;
     }
 
+    /**
+     * This method is used to determine if two matrices are equal.
+     * @param subGroups1 - first matrix of groups to be compared.
+     * @param subGroups2 - second matrix of groups to be compared.
+    */   
+
+    private boolean isTheSame(ArrayList<ArrayList<Integer>> subGroups1, ArrayList<ArrayList<Integer>> subGroups2) {
+        boolean stop = subGroups1.size() == subGroups2.size() ? false : true;
+        for (int i = 0; i < subGroups1.size() && !stop; i++) {
+            ArrayList<Integer> subGroup1 = subGroups1.get(i), subGroup2 = subGroups2.get(i);
+            stop = subGroup1.size() == subGroup2.size() ? false : true;
+            for (int j = 0; j < subGroup1.size() && !stop; j++)
+                stop = subGroup1.get(j) == subGroup2.get(j) ? false : true;
+        }
+        return !stop;
+    }
+
+    /**
+     * This method is used to get the groups of the first partition (step 2a of the partitioning algorithm).
+    */ 
+
     private ArrayList<ArrayList<Integer>> step2A() {
         ArrayList<ArrayList<Integer>> groups = new ArrayList<>();
         for (int i = 0; i < outputSymbols.length; i++) {
@@ -157,6 +232,10 @@ public class Moore {
         return groups;
     }
 
+    /**
+     * This method is used to get the groups of the following partitions (step 2b of the partitioning algorithm).
+     * @param groups - groups of the first partition.
+    */
 
     private ArrayList<ArrayList<Integer>> step2B(ArrayList<ArrayList<Integer>> groups) {
         ArrayList<ArrayList<Integer>> subGroups = new ArrayList<>();
@@ -196,18 +275,12 @@ public class Moore {
         return subGroups;
     }
 
-    private boolean isTheSame(ArrayList<ArrayList<Integer>> subGroups1, ArrayList<ArrayList<Integer>> subGroups2) {
-        boolean stop = subGroups1.size() == subGroups2.size() ? false : true;
-        for (int i = 0; i < subGroups1.size() && !stop; i++) {
-            ArrayList<Integer> subGroup1 = subGroups1.get(i), subGroup2 = subGroups2.get(i);
-            stop = subGroup1.size() == subGroup2.size() ? false : true;
-            for (int j = 0; j < subGroup1.size() && !stop; j++)
-                stop = subGroup1.get(j) == subGroup2.get(j) ? false : true;
-        }
-        return !stop;
-    }
+    /**
+     * This method is used to get the index of a group in a matrix of groups given.
+     * @param groups - matrix group to be compared.
+     * @param num - integer representing a group in the matrix of groups.
+    */
 
-  
     private int indexOfGroup(ArrayList<ArrayList<Integer>> groups, int num) {
         int index = -1;
         boolean exists = false;
@@ -222,6 +295,11 @@ public class Moore {
         }
         return index;
     }
+
+    /**
+     * This method is used to fill the input and output symbols matrix, and the successors matrix of a Moore machine.
+     * @param machine - Java String matrix representing a Moore machine
+    */
 
     private void fillMoore(String[][] machine) {
         inputSymbols(machine);
@@ -239,6 +317,11 @@ public class Moore {
         this.outputSymbols = outputSymbols;
     }
 
+    /**
+     * This method is used to fill the input list of a Moore machine.
+     * @param machine - Java String matrix representing a Moore machine.
+    */
+
     private void inputSymbols(String[][] machine) {
         int length = machine[0].length - 2;
         String[] inputSymbols = new String[length];
@@ -247,6 +330,11 @@ public class Moore {
         }
         this.inputSymbols = inputSymbols;
     }
+
+    /**
+     * This method is used to fill the states list of a Moore machine.
+     * @param machine - Java String matrix representing a Moore machine.
+    */
 
     private void states(String[][] machine) {
         int length = machine.length;
